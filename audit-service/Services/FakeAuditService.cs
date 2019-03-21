@@ -2,7 +2,6 @@
 using data_library.Enumerations;
 using data_library.Interfaces;
 using data_library.Models;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,19 +10,17 @@ using System.Threading.Tasks;
 
 namespace AuditService.Services
 {
-    public class AuditService<T> : IAuditService<T>
+    public class FakeAuditService<T> : IAuditService<T>
     {
-        private AuditContext context;
+        private List<AuditEvent> localData;
 
-        public AuditService(AuditContext context)
+        public FakeAuditService()
         {
-            this.context = context;
+            localData = new List<AuditEvent>();
         }
 
-        public async Task<bool> CreateEntryAsync(Operation operation, T before, T after)
+        public Task<bool> CreateEntryAsync(Operation operation, T before, T after)
         {
-            int updatedCount = 0;
-
             var entry = new AuditEvent()
             {
                 Id = Guid.NewGuid().ToString(),
@@ -59,18 +56,15 @@ namespace AuditService.Services
                     entry.Changes.Add(auditEventItem);
             }
 
-            if(entry.Changes.Any())
+            if (entry.Changes.Any())
             {
-                context.AuditEvents.Add(entry);
-                updatedCount = await context.SaveChangesAsync();
+                localData.Add(entry);
             }
 
-            return updatedCount > 0;
+            return Task.FromResult(true);
         }
 
-        public async Task<IEnumerable<AuditEvent>> GetAsync()
-        {
-            return await context.AuditEvents.Include(t => t.Changes).ToListAsync();
-        }
+        public Task<IEnumerable<AuditEvent>> GetAsync()
+            => Task.FromResult(localData.AsEnumerable());
     }
 }

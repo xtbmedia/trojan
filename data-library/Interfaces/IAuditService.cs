@@ -10,6 +10,6 @@ namespace data_library.Interfaces
     public interface IAuditService<T>
     {
         Task<bool> CreateEntryAsync(Operation operation, T before, T after);
-        IEnumerable<AuditEvent> GetAsync();
+        Task<IEnumerable<AuditEvent>> GetAsync();
     }
 }

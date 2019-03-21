@@ -13,9 +13,11 @@ namespace data_library.DataContexts.Transport
         {
             Database.EnsureCreated();
         }
+
         public DbSet<Aeroplane> Aeroplanes { get; set; }
 
         public Task<int> SaveChangesAsync() =>
             base.SaveChangesAsync();
+
     }
 }

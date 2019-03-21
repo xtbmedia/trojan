@@ -13,6 +13,7 @@ namespace data_library.DataContexts.AuditTrail
         {
             Database.EnsureCreated();
         }
+
         public DbSet<AuditEvent> AuditEvents { get; set; }
 
         public Task<int> SaveChangesAsync()

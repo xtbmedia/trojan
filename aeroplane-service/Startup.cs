@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AeroplaneService.Services;
 using AuditService.Services;
+using data_library.DataContexts.AuditTrail;
 using data_library.DataContexts.Transport;
 using data_library.Interfaces;
 using data_library.Models;
@@ -36,7 +37,12 @@ namespace aeroplane_service
             services.AddTransient<IDataService<Aeroplane>, AeroplaneService.Services.AeroplaneService>();
             services.AddDbContext<AeroplaneContext>(
                 options => options.UseSqlServer(
-                    "Server=tcp:trojan-demo.database.windows.net,1433;Initial Catalog=aeroplanes;Persist Security Info=False;User ID=dba;Password=***;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
+                    Configuration.GetConnectionString("trojan-demo"),
+                    sqlOptions => sqlOptions.EnableRetryOnFailure()
+                    ));
+            services.AddDbContext<AuditContext>(
+                options => options.UseSqlServer(
+                    Configuration.GetConnectionString("trojan-audit"),
                     sqlOptions => sqlOptions.EnableRetryOnFailure()
                     ));
             services.AddTransient<IAeroplaneContext, AeroplaneContext>();

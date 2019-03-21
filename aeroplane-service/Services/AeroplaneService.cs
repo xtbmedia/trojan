@@ -62,10 +62,10 @@ namespace AeroplaneService.Services
             else
             {
                 await auditService.CreateEntryAsync(Operation.Update, existing, entity);
-                context.Aeroplanes.Attach(entity);
+                context.Entry(existing).CurrentValues.SetValues(entity);
             }
             await context.SaveChangesAsync();
-            return entity;
+            return existing;
         }
     }
 }

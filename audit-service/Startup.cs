@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using data_library.DataContexts.AuditTrail;
+using data_library.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -26,6 +29,12 @@ namespace audit_service
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddTransient<IAuditService<object>, AuditService.Services.AuditService<object>>();
+            services.AddDbContext<AuditContext>(
+                options => options.UseSqlServer(
+                    Configuration.GetConnectionString("trojan-audit"),
+                    sqlOptions => sqlOptions.EnableRetryOnFailure()
+                    ));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

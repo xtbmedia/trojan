@@ -61,10 +61,10 @@ namespace DogService.Services
             else
             {
                 await auditService.CreateEntryAsync(Operation.Update, existing, entity);
-                context.Dogs.Attach(entity);
+                context.Entry(existing).CurrentValues.SetValues(entity);
             }
             await context.SaveChangesAsync();
-            return entity;
+            return existing;
         }
     }
 }
