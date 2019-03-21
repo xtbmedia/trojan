@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace dog_service.Controllers
+namespace audit_service.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

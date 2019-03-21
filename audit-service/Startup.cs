@@ -2,21 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using data_library.DataContexts.Canine;
-using data_library.Interfaces;
-using data_library.Models;
-using DogService.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace dog_service
+namespace audit_service
 {
     public class Startup
     {
@@ -31,13 +26,6 @@ namespace dog_service
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddTransient<IAuditService<Dog>, AuditService.Services.AuditService<Dog>>();
-            services.AddTransient<IDataService<Dog>, DogService.Services.DogService>();
-            services.AddDbContext<DogContext>(
-                options => options.UseSqlServer(
-                    "Server=tcp:trojan-demo.database.windows.net,1433;Initial Catalog=dogs;Persist Security Info=False;User ID=dba;Password=***;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",                    sqlOptions => sqlOptions.EnableRetryOnFailure()
-                    ));
-            services.AddTransient<IDogContext, DogContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
